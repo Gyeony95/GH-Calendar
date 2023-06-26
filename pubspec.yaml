@@ -1,6 +1,6 @@
 name: gh_calendar
 description: A new Flutter package project.
-version: 0.0.1
+version: 0.1.0
 repository: https://github.com/Gyeony95/GH-Calendar
 
 environment:
