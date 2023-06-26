@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: CustomCalendar(
+            isPeriodSelect: true,
             activeMinDate: DateTime.now().add(const Duration(days: -1)),
             onChanged: (dateTimes) {
 

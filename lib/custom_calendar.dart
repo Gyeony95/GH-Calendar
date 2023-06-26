@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gh_calendar/date_util.dart';
+import 'package:gh_calendar/tap_well.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'calendar_provider.dart';
@@ -13,8 +14,14 @@ class CustomCalendar extends StatefulWidget {
   final Function(List<DateTime>)? onChanged;
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
+  Color touchableDateTextColor = Colors.black;
+  Color unTouchableDateTextColor = Colors.grey;
+  Color selectedDateTextColor = Colors.white;
+  Color highlightColor = Colors.blueAccent;
+  Color highlightPeriodColor = Colors.lightBlue;
 
-  const CustomCalendar({
+
+  CustomCalendar({
     Key? key,
     this.isPeriodSelect = false,
     this.startWeekday = DateTime.sunday,
@@ -22,6 +29,11 @@ class CustomCalendar extends StatefulWidget {
     this.onChanged,
     this.activeMaxDate,
     this.activeMinDate,
+    this.touchableDateTextColor = Colors.black,
+    this.unTouchableDateTextColor = Colors.grey,
+    this.selectedDateTextColor = Colors.white,
+    this.highlightColor = Colors.blueAccent,
+    this.highlightPeriodColor = Colors.lightBlue,
   }) : super(key: key);
 
   @override
@@ -37,7 +49,6 @@ class _CustomCalendarState extends State<CustomCalendar> {
     _pageController = PageController(
       initialPage: now.year * 12 + now.month - 1,
     );
-
     super.initState();
   }
 
@@ -52,13 +63,18 @@ class _CustomCalendarState extends State<CustomCalendar> {
           activeMinDate: widget.activeMinDate),
       builder: (context, child) {
         return _CustomCalendarInternal(
-          controller: _pageController,
+          pageController: _pageController,
           isPeriodSelect: widget.isPeriodSelect,
           startWeekday: widget.startWeekday,
           targetDate: widget.targetDate,
           onChanged: widget.onChanged,
           activeMaxDate: widget.activeMaxDate,
           activeMinDate: widget.activeMinDate,
+          touchableDateTextColor: widget.touchableDateTextColor,
+          unTouchableDateTextColor: widget.unTouchableDateTextColor,
+          selectedDateTextColor: widget.selectedDateTextColor,
+          highlightColor: widget.highlightColor,
+          highlightPeriodColor: widget.highlightPeriodColor,
         );
       },
     );
@@ -66,7 +82,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
 }
 
 class _CustomCalendarInternal extends StatelessWidget {
-  final PageController controller;
+  final PageController pageController;
 
   final bool isPeriodSelect;
   final int startWeekday;
@@ -74,18 +90,29 @@ class _CustomCalendarInternal extends StatelessWidget {
   final Function(List<DateTime>)? onChanged;
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
+  Color touchableDateTextColor = Colors.black;
+  Color unTouchableDateTextColor = Colors.grey;
+  Color selectedDateTextColor = Colors.white;
+  Color highlightColor = Colors.blueAccent;
+  Color highlightPeriodColor = Colors.lightBlue;
+
 
   final _elements = <SelectableElement>{};
 
   _CustomCalendarInternal({
     Key? key,
-    required this.controller,
+    required this.pageController,
     required this.isPeriodSelect,
     required this.startWeekday,
     this.targetDate,
     this.onChanged,
     this.activeMinDate,
     this.activeMaxDate,
+    this.touchableDateTextColor = Colors.black,
+    this.unTouchableDateTextColor = Colors.grey,
+    this.selectedDateTextColor = Colors.white,
+    this.highlightColor = Colors.blueAccent,
+    this.highlightPeriodColor = Colors.lightBlue,
   }) : super(key: key);
 
   @override
@@ -106,7 +133,7 @@ class _CustomCalendarInternal extends StatelessWidget {
         const SizedBox(height: 4),
         Expanded(
           child: PageView.builder(
-            controller: controller,
+            controller: pageController,
             itemBuilder: (context, index) {
               var curMonth = calendarProvider.makeDateTimeByIndex(index);
 
@@ -124,15 +151,13 @@ class _CustomCalendarInternal extends StatelessWidget {
   Widget monthWidget(BuildContext context, DateTime curMonth) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            controller.previousPage(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.ease,
-            );
-          },
+        TapWell(
+          onTap: () => pageController.previousPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+          ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(14, 0, 8, 0),
             child: Icon(
@@ -141,8 +166,6 @@ class _CustomCalendarInternal extends StatelessWidget {
             ),
           ),
         ),
-        if (isPeriodSelect) const SizedBox(width: 16),
-        if (!isPeriodSelect) const Spacer(),
         Text(
           DateFormat.yMMM().format(curMonth),
           style: TextStyle(
@@ -150,16 +173,11 @@ class _CustomCalendarInternal extends StatelessWidget {
             fontSize: 13,
           ),
         ),
-        if (isPeriodSelect) const SizedBox(width: 16),
-        if (!isPeriodSelect) const Spacer(),
-        GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            controller.nextPage(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.ease,
-            );
-          },
+        TapWell(
+          onTap: () => pageController.nextPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+          ),
           child: const Padding(
             padding: EdgeInsets.fromLTRB(8, 0, 14, 0),
             child: Icon(
@@ -168,26 +186,6 @@ class _CustomCalendarInternal extends StatelessWidget {
             ),
           ),
         ),
-        if (isPeriodSelect) const Spacer(),
-        if (isPeriodSelect)
-          GestureDetector(
-            onTap: () {
-              Provider.of<CalendarProvider>(
-                context,
-                listen: false,
-              ).clearSelected();
-            },
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-              child: Text(
-                '초기화',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: c555555,
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }
@@ -300,8 +298,7 @@ class _CustomCalendarInternal extends StatelessWidget {
         dateTime: curDay,
         onMountElement: _elements.add,
         onUnmountElement: _elements.remove,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
+        child: TapWell(
           onTap: () {
             Provider.of<CalendarProvider>(
               context,
@@ -345,7 +342,7 @@ class _CustomCalendarInternal extends StatelessWidget {
           height: 24,
           width: 24,
           decoration: BoxDecoration(
-            color: cDAFF70,
+            color: highlightColor,
             borderRadius: BorderRadius.circular(2),
           ),
           child: const SizedBox(),
@@ -363,7 +360,7 @@ class _CustomCalendarInternal extends StatelessWidget {
           height: 24,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: cD3E4A2,
+            color: highlightPeriodColor,
             borderRadius: BorderRadius.horizontal(
               left: isFirst ? const Radius.circular(2) : Radius.zero,
               right: isFirst ? Radius.zero : const Radius.circular(2),
@@ -394,7 +391,7 @@ class _CustomCalendarInternal extends StatelessWidget {
             height: 24,
             width: 24,
             decoration: BoxDecoration(
-              color: cDAFF70,
+              color: highlightColor,
               borderRadius: BorderRadius.circular(2),
             ),
             child: const SizedBox(),
@@ -426,7 +423,7 @@ class _CustomCalendarInternal extends StatelessWidget {
             1,
           ),
           // 위젯 기간 선택시 사이를 매꿔주기 위해 매트릭스 사용
-          color: cD3E4A2,
+          color: highlightPeriodColor,
           child: const SizedBox(),
         ),
       );
@@ -439,7 +436,7 @@ class _CustomCalendarInternal extends StatelessWidget {
       child: Text(
         '${curDay.day}',
         style: TextStyle(
-          color: selected ? c000000 : cFFFFFF,
+          color: selected ? selectedDateTextColor : touchableDateTextColor,
           fontSize: 15,
           fontWeight: FontWeight.bold,
         ),
@@ -454,7 +451,7 @@ class _CustomCalendarInternal extends StatelessWidget {
         '${curDay.day}',
         style: TextStyle(
           fontSize: 15,
-          color: c888888,
+          color: unTouchableDateTextColor,
         ),
       ),
     );
