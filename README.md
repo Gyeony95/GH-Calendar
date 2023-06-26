@@ -108,7 +108,3 @@ class _MyHomePageState extends State<MyHomePage> {
 ## Support
 
 For any issues or feature requests, please create a new issue on the [GitHub repository](https://github.com/Gyeony95/GH-Calendar/issues).
-
----
-
-Feel free to modify the markdown file according to the specific details and usage instructions of the "gh_calendar" package.
