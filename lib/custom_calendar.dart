@@ -7,7 +7,7 @@ import 'calendar_provider.dart';
 import 'colors.dart';
 import 'selectable.dart';
 
-class CustomCalendar extends StatefulWidget {
+class GhCalendar extends StatefulWidget {
   final bool isPeriodSelect;
   final int startWeekday;
   final List<DateTime>? targetDate;
@@ -21,7 +21,7 @@ class CustomCalendar extends StatefulWidget {
   final Color? highlightPeriodColor;
 
 
-  const CustomCalendar({
+  const GhCalendar({
     Key? key,
     this.isPeriodSelect = false,
     this.startWeekday = DateTime.sunday,
@@ -38,10 +38,10 @@ class CustomCalendar extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _CustomCalendarState createState() => _CustomCalendarState();
+  _GhCalendarState createState() => _GhCalendarState();
 }
 
-class _CustomCalendarState extends State<CustomCalendar> {
+class _GhCalendarState extends State<GhCalendar> {
   late PageController _pageController;
 
   @override
@@ -63,7 +63,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
           activeMaxDate: widget.activeMaxDate,
           activeMinDate: widget.activeMinDate),
       builder: (context, child) {
-        return _CustomCalendarInternal(
+        return _GhCalendarInternal(
           pageController: _pageController,
           isPeriodSelect: widget.isPeriodSelect,
           startWeekday: widget.startWeekday,
@@ -82,7 +82,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
   }
 }
 
-class _CustomCalendarInternal extends StatelessWidget {
+class _GhCalendarInternal extends StatelessWidget {
   final PageController pageController;
 
   final bool isPeriodSelect;
@@ -101,7 +101,7 @@ class _CustomCalendarInternal extends StatelessWidget {
 
   final _elements = <SelectableElement>{};
 
-  _CustomCalendarInternal({
+  _GhCalendarInternal({
     Key? key,
     required this.pageController,
     required this.isPeriodSelect,
