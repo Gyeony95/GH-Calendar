@@ -14,14 +14,14 @@ class CustomCalendar extends StatefulWidget {
   final Function(List<DateTime>)? onChanged;
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
-  Color touchableDateTextColor = Colors.black;
-  Color unTouchableDateTextColor = Colors.grey;
-  Color selectedDateTextColor = Colors.white;
-  Color highlightColor = Colors.blueAccent;
-  Color highlightPeriodColor = Colors.lightBlue;
+  final Color? touchableDateTextColor;
+  final Color? unTouchableDateTextColor;
+  final Color? selectedDateTextColor;
+  final Color? highlightColor;
+  final Color? highlightPeriodColor;
 
 
-  CustomCalendar({
+  const CustomCalendar({
     Key? key,
     this.isPeriodSelect = false,
     this.startWeekday = DateTime.sunday,
@@ -37,6 +37,7 @@ class CustomCalendar extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomCalendarState createState() => _CustomCalendarState();
 }
 
@@ -90,11 +91,12 @@ class _CustomCalendarInternal extends StatelessWidget {
   final Function(List<DateTime>)? onChanged;
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
-  Color touchableDateTextColor = Colors.black;
-  Color unTouchableDateTextColor = Colors.grey;
-  Color selectedDateTextColor = Colors.white;
-  Color highlightColor = Colors.blueAccent;
-  Color highlightPeriodColor = Colors.lightBlue;
+  final Color? touchableDateTextColor;
+  final Color? unTouchableDateTextColor;
+  final Color? selectedDateTextColor;
+  final Color? highlightColor;
+  final Color? highlightPeriodColor;
+
 
 
   final _elements = <SelectableElement>{};
