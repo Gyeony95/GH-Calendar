@@ -1,7 +1,3 @@
-Certainly! Here's a sample markdown file introducing the "gh_calendar" package for simple single date selection and date range selection:
-
----
-
 # gh_calendar Package
 
 The **gh_calendar** package provides a simple and intuitive way to implement date selection functionalities in Flutter applications. It allows users to select a single date or a date range effortlessly.
