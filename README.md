@@ -34,15 +34,15 @@ To use the **gh_calendar** package, follow these steps:
 
 2. Create a `GhCalendar` widget in your widget tree:
 
-```dart
-GhCalendar(
-    isPeriodSelect: true,
-    activeMinDate: DateTime.now().add(const Duration(days: -1)),
-    onChanged: (dateTimes) {
-      /// some code...
-    },
-)
-```
+   ```dart
+   GhCalendar(
+       isPeriodSelect: true,
+       activeMinDate: DateTime.now().add(const Duration(days: -1)),
+       onChanged: (dateTimes) {
+         /// some code...
+       },
+   )
+   ```
 
 3. Customize the appearance and behavior of the calendar using the available parameters.
 
