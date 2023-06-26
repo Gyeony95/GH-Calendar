@@ -42,7 +42,7 @@ To use the **gh_calendar** package, follow these steps:
 
 3. Customize the appearance and behavior of the calendar using the available parameters.
 
-4. Access the selected date or date range using the callback functions provided (`onDateSelected` and `onDateRangeSelected`).
+4. Access the selected date or date range using the callback functions provided (`onChanged`).
 
 ## Example
 
