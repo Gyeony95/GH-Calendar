@@ -8,7 +8,7 @@ class CalendarController extends GetxController {
 
   Rx<DateTime> curMonth = DateTime.now().obs;
   RxList<DateTime> curSelect = <DateTime>[].obs;
-  RxList<DateTime> _tempSelect = <DateTime>[].obs;
+  final RxList<DateTime> _tempSelect = <DateTime>[].obs;
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
 
@@ -71,7 +71,7 @@ class CalendarController extends GetxController {
     _tempSelect.sort((a, b) {
       return a.compareTo(b);
     });
-    curSelect.value = _tempSelect.value;
+    curSelect.value = _tempSelect;
     onChanged!(_tempSelect);
   }
 

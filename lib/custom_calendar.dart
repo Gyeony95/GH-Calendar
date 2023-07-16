@@ -94,6 +94,7 @@ class _GhCalendarStateV2 extends State<GhCalendar> {
   }
 }
 
+// ignore: must_be_immutable
 class _GhCalendarInternal extends StatelessWidget {
   final PageController pageController;
 
