@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
-          child: GhCalendar(
+          child: GhCalendarV2(
             isPeriodSelect: true,
             activeMinDate: DateTime.now().add(const Duration(days: -1)),
             onChanged: (dateTimes) {
