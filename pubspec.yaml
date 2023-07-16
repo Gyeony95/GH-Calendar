@@ -1,6 +1,6 @@
 name: gh_calendar
 description: This package provides the ability to easily draw a calendar with single date selections and period selections.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/Gyeony95/GH-Calendar
 
 environment:
