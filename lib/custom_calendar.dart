@@ -323,7 +323,8 @@ class _GhCalendarInternal extends StatelessWidget {
     bool isMainDate = (index == 0) || (index == curSelect.length - 1);
     if (isPeriodSelected == false) {
       return Container(
-        alignment: Alignment.center,
+        alignment: dayAlignment ?? Alignment.center,
+        decoration: _decoration,
         child: Container(
           height: 24,
           width: 24,
@@ -339,9 +340,9 @@ class _GhCalendarInternal extends StatelessWidget {
       bool isFirst = index == 0;
 
       return Container(
-        alignment: Alignment.center,
-        padding:
-            EdgeInsets.only(left: isFirst ? 10 : 0, right: isFirst ? 0 : 10),
+        alignment: dayAlignment ?? Alignment.center,
+        decoration: _decoration,
+
         child: Container(
           height: 24,
           width: double.infinity,
@@ -371,8 +372,7 @@ class _GhCalendarInternal extends StatelessWidget {
             1,
           ),
           // 위젯 기간 선택시 사이를 매꿔주기 위해 매트릭스 사용
-          padding:
-              EdgeInsets.only(left: isFirst ? 0 : 10, right: isFirst ? 10 : 1),
+
           child: Container(
             height: 24,
             width: 24,
@@ -386,7 +386,8 @@ class _GhCalendarInternal extends StatelessWidget {
       );
     } else {
       return Container(
-        alignment: Alignment.center,
+        alignment: dayAlignment ?? Alignment.center,
+        decoration: _decoration,
         child: Container(
           height: 24,
           width: double.infinity,
