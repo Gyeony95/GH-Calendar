@@ -8,9 +8,10 @@ import 'colors.dart';
 import 'selectable.dart';
 
 class GhCalendar extends StatefulWidget {
+  /// 기간 선택 유무
   final bool isPeriodSelect;
+  /// 한 주의 시작일이 무슨 요일인지
   final int startWeekday;
-  final List<DateTime>? targetDate;
   final Function(List<DateTime>)? onChanged;
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
@@ -26,7 +27,6 @@ class GhCalendar extends StatefulWidget {
     Key? key,
     this.isPeriodSelect = false,
     this.startWeekday = DateTime.sunday,
-    this.targetDate,
     this.onChanged,
     this.activeMaxDate,
     this.activeMinDate,
@@ -59,7 +59,6 @@ class _GhCalendarStateV2 extends State<GhCalendar> {
     Get.put(
       CalendarController(
           isPeriodSelect: widget.isPeriodSelect,
-          targetDate: widget.targetDate,
           onChanged: widget.onChanged,
           activeMaxDate: widget.activeMaxDate,
           activeMinDate: widget.activeMinDate),
@@ -68,7 +67,6 @@ class _GhCalendarStateV2 extends State<GhCalendar> {
       pageController: _pageController,
       isPeriodSelect: widget.isPeriodSelect,
       startWeekday: widget.startWeekday,
-      targetDate: widget.targetDate,
       onChanged: widget.onChanged,
       activeMaxDate: widget.activeMaxDate,
       activeMinDate: widget.activeMinDate,
@@ -86,7 +84,6 @@ class _GhCalendarInternal extends StatelessWidget {
 
   final bool isPeriodSelect;
   final int startWeekday;
-  final List<DateTime>? targetDate;
   final Function(List<DateTime>)? onChanged;
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
@@ -103,7 +100,6 @@ class _GhCalendarInternal extends StatelessWidget {
     required this.pageController,
     required this.isPeriodSelect,
     required this.startWeekday,
-    this.targetDate,
     this.onChanged,
     this.activeMinDate,
     this.activeMaxDate,
