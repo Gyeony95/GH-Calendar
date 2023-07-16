@@ -44,9 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
             useGrid: true,
             dayAlignment: Alignment.topLeft,
             activeMinDate: DateTime.now().add(const Duration(days: -1)),
-            onChanged: (dateTimes) {
-
-            },
+            onChanged: (dateTimes) {},
           ),
         ),
       ),

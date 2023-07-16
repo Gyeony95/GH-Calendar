@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gh_calendar/canlendar_controller.dart';
 import 'package:gh_calendar/date_util.dart';
 import 'package:gh_calendar/tap_well.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'colors.dart';
 import 'selectable.dart';
@@ -22,6 +23,7 @@ class GhCalendar extends StatefulWidget {
   final bool? useGrid;
   /// 날짜가 컨테이너 내부 어디에 위치해 있는지에 대한 값
   final Alignment? dayAlignment;
+  final String? local;
   /// 각 요소별 색상
   final Color? touchableDateTextColor;
   final Color? unTouchableDateTextColor;
@@ -38,6 +40,7 @@ class GhCalendar extends StatefulWidget {
     this.activeMinDate,
     this.useGrid,
     this.dayAlignment,
+    this.local,
     this.touchableDateTextColor = Colors.black,
     this.unTouchableDateTextColor = Colors.grey,
     this.selectedDateTextColor = Colors.white,
@@ -55,6 +58,7 @@ class _GhCalendarStateV2 extends State<GhCalendar> {
 
   @override
   void initState() {
+    initializeDateFormatting(widget.local ?? 'ko_KR');
     var now = DateTime.now();
     _pageController = PageController(
       initialPage: now.year * 12 + now.month - 1,
@@ -80,6 +84,7 @@ class _GhCalendarStateV2 extends State<GhCalendar> {
       activeMinDate: widget.activeMinDate,
       useGrid: widget.useGrid,
       dayAlignment: widget.dayAlignment,
+      local: widget.local,
       touchableDateTextColor: widget.touchableDateTextColor,
       unTouchableDateTextColor: widget.unTouchableDateTextColor,
       selectedDateTextColor: widget.selectedDateTextColor,
@@ -99,6 +104,7 @@ class _GhCalendarInternal extends StatelessWidget {
   final DateTime? activeMaxDate;
   final bool? useGrid;
   final Alignment? dayAlignment;
+  final String? local;
   final Color? touchableDateTextColor;
   final Color? unTouchableDateTextColor;
   final Color? selectedDateTextColor;
@@ -117,6 +123,7 @@ class _GhCalendarInternal extends StatelessWidget {
     this.activeMaxDate,
     this.useGrid,
     this.dayAlignment,
+    this.local,
     this.touchableDateTextColor = Colors.black,
     this.unTouchableDateTextColor = Colors.grey,
     this.selectedDateTextColor = Colors.white,
@@ -199,7 +206,7 @@ class _GhCalendarInternal extends StatelessWidget {
           child: Container(
             alignment: Alignment.center,
             child: Text(
-              DateFormat.E().format(dateWeek),
+              DateFormat.E(local ?? 'ko_KR').format(dateWeek),
               style: TextStyle(
                 color: c888888,
                 fontSize: 11,
