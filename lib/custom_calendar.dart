@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:gh_calendar/canlendar_controller.dart';
 import 'package:gh_calendar/date_util.dart';
 import 'package:gh_calendar/tap_well.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'calendar_provider.dart';
 import 'colors.dart';
 import 'selectable.dart';
 
@@ -14,12 +14,13 @@ class GhCalendar extends StatefulWidget {
   final Function(List<DateTime>)? onChanged;
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
+
+  /// 각 요소별 색상
   final Color? touchableDateTextColor;
   final Color? unTouchableDateTextColor;
   final Color? selectedDateTextColor;
   final Color? highlightColor;
   final Color? highlightPeriodColor;
-
 
   const GhCalendar({
     Key? key,
@@ -38,10 +39,10 @@ class GhCalendar extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _GhCalendarState createState() => _GhCalendarState();
+  _GhCalendarStateV2 createState() => _GhCalendarStateV2();
 }
 
-class _GhCalendarState extends State<GhCalendar> {
+class _GhCalendarStateV2 extends State<GhCalendar> {
   late PageController _pageController;
 
   @override
@@ -55,29 +56,27 @@ class _GhCalendarState extends State<GhCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => CalendarProvider(
+    Get.put(
+      CalendarController(
           isPeriodSelect: widget.isPeriodSelect,
           targetDate: widget.targetDate,
           onChanged: widget.onChanged,
           activeMaxDate: widget.activeMaxDate,
           activeMinDate: widget.activeMinDate),
-      builder: (context, child) {
-        return _GhCalendarInternal(
-          pageController: _pageController,
-          isPeriodSelect: widget.isPeriodSelect,
-          startWeekday: widget.startWeekday,
-          targetDate: widget.targetDate,
-          onChanged: widget.onChanged,
-          activeMaxDate: widget.activeMaxDate,
-          activeMinDate: widget.activeMinDate,
-          touchableDateTextColor: widget.touchableDateTextColor,
-          unTouchableDateTextColor: widget.unTouchableDateTextColor,
-          selectedDateTextColor: widget.selectedDateTextColor,
-          highlightColor: widget.highlightColor,
-          highlightPeriodColor: widget.highlightPeriodColor,
-        );
-      },
+    );
+    return _GhCalendarInternal(
+      pageController: _pageController,
+      isPeriodSelect: widget.isPeriodSelect,
+      startWeekday: widget.startWeekday,
+      targetDate: widget.targetDate,
+      onChanged: widget.onChanged,
+      activeMaxDate: widget.activeMaxDate,
+      activeMinDate: widget.activeMinDate,
+      touchableDateTextColor: widget.touchableDateTextColor,
+      unTouchableDateTextColor: widget.unTouchableDateTextColor,
+      selectedDateTextColor: widget.selectedDateTextColor,
+      highlightColor: widget.highlightColor,
+      highlightPeriodColor: widget.highlightPeriodColor,
     );
   }
 }
@@ -97,8 +96,6 @@ class _GhCalendarInternal extends StatelessWidget {
   final Color? highlightColor;
   final Color? highlightPeriodColor;
 
-
-
   final _elements = <SelectableElement>{};
 
   _GhCalendarInternal({
@@ -117,33 +114,23 @@ class _GhCalendarInternal extends StatelessWidget {
     this.highlightPeriodColor = Colors.lightBlue,
   }) : super(key: key);
 
+  late CalendarController calController;
+
   @override
   Widget build(BuildContext context) {
-    final calendarProvider = Provider.of<CalendarProvider>(
-      context,
-      listen: false,
-    );
-
+    calController = Get.find<CalendarController>();
     return Column(
       children: [
-        Selector<CalendarProvider, DateTime>(
-          selector: (context, provider) => provider.curMonth,
-          builder: (context, value, child) {
-            return monthWidget(context, value);
-          },
-        ),
+        monthWidget(context, calController.curMonth.value),
         const SizedBox(height: 4),
         Expanded(
           child: PageView.builder(
             controller: pageController,
             itemBuilder: (context, index) {
-              var curMonth = calendarProvider.makeDateTimeByIndex(index);
-
+              var curMonth = calController.makeDateTimeByIndex(index);
               return dayWidget(curMonth);
             },
-            onPageChanged: (index) {
-              calendarProvider.changeCurMonth(index);
-            },
+            onPageChanged: calController.changeCurMonth,
           ),
         ),
       ],
@@ -290,9 +277,7 @@ class _GhCalendarInternal extends StatelessWidget {
   }
 
   Widget _makeDay(BuildContext context, int index, DateTime curDay) {
-    var isEnabled = Provider.of<CalendarProvider>(context).isEnableDate(
-      curDay,
-    );
+    var isEnabled = calController.isEnableDate(curDay);
 
     return IgnorePointer(
       ignoring: !isEnabled,
@@ -301,29 +286,20 @@ class _GhCalendarInternal extends StatelessWidget {
         onMountElement: _elements.add,
         onUnmountElement: _elements.remove,
         child: TapWell(
-          onTap: () {
-            Provider.of<CalendarProvider>(
-              context,
-              listen: false,
-            ).changeCurSelect(curDay);
-          },
-          child: Selector<CalendarProvider, List<DateTime>>(
-            selector: (context, provider) => provider.curSelect,
-            builder: (context, curSelect, child) {
-              var selected =
-                  curSelect.indexWhere((date) => date.isSameDate(curDay)) != -1;
-
-              return Stack(
-                children: [
-                  _selectDayWidget(selected, curSelect, curDay),
-                  if (DateTime.now().isSameDate(curDay)) const SizedBox(),
-                  isEnabled
-                      ? _normalDayWidget(curDay, selected)
-                      : _disabledDayWidget(curDay),
-                ],
-              );
-            },
-          ),
+          onTap: () => calController.changeCurSelect(curDay),
+          child: Obx((){
+            var selected =
+                calController.curSelect.indexWhere((date) => date.isSameDate(curDay)) != -1;
+            return Stack(
+              children: [
+                _selectDayWidget(selected, calController.curSelect, curDay),
+                if (DateTime.now().isSameDate(curDay)) const SizedBox(),
+                isEnabled
+                    ? _normalDayWidget(curDay, selected)
+                    : _disabledDayWidget(curDay),
+              ],
+            );
+          })
         ),
       ),
     );

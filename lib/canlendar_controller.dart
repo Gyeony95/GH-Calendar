@@ -12,13 +12,6 @@ class CalendarController extends GetxController {
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
 
-  // @override
-  // void onInit(){
-  //   super.onInit();
-  //
-  //
-  // }
-
   CalendarController({
     required this.isPeriodSelect,
     this.targetDate,
