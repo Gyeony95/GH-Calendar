@@ -41,6 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: GhCalendar(
             isPeriodSelect: true,
+            useGrid: true,
+            dayAlignment: Alignment.topLeft,
             activeMinDate: DateTime.now().add(const Duration(days: -1)),
             onChanged: (dateTimes) {
 

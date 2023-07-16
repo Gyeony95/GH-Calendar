@@ -12,10 +12,16 @@ class GhCalendar extends StatefulWidget {
   final bool isPeriodSelect;
   /// 한 주의 시작일이 무슨 요일인지
   final int startWeekday;
+  /// 날짜 변경시 첫날짜와 끝날짜 반환, 싱글선택시 하나만 반환
   final Function(List<DateTime>)? onChanged;
+  /// 선택 가능한 최소 날짜
   final DateTime? activeMinDate;
+  /// 선택 가능한 최대 날짜
   final DateTime? activeMaxDate;
-
+  /// 격자무늬 사용 유무
+  final bool? useGrid;
+  /// 날짜가 컨테이너 내부 어디에 위치해 있는지에 대한 값
+  final Alignment? dayAlignment;
   /// 각 요소별 색상
   final Color? touchableDateTextColor;
   final Color? unTouchableDateTextColor;
@@ -30,6 +36,8 @@ class GhCalendar extends StatefulWidget {
     this.onChanged,
     this.activeMaxDate,
     this.activeMinDate,
+    this.useGrid,
+    this.dayAlignment,
     this.touchableDateTextColor = Colors.black,
     this.unTouchableDateTextColor = Colors.grey,
     this.selectedDateTextColor = Colors.white,
@@ -70,6 +78,8 @@ class _GhCalendarStateV2 extends State<GhCalendar> {
       onChanged: widget.onChanged,
       activeMaxDate: widget.activeMaxDate,
       activeMinDate: widget.activeMinDate,
+      useGrid: widget.useGrid,
+      dayAlignment: widget.dayAlignment,
       touchableDateTextColor: widget.touchableDateTextColor,
       unTouchableDateTextColor: widget.unTouchableDateTextColor,
       selectedDateTextColor: widget.selectedDateTextColor,
@@ -87,6 +97,8 @@ class _GhCalendarInternal extends StatelessWidget {
   final Function(List<DateTime>)? onChanged;
   final DateTime? activeMinDate;
   final DateTime? activeMaxDate;
+  final bool? useGrid;
+  final Alignment? dayAlignment;
   final Color? touchableDateTextColor;
   final Color? unTouchableDateTextColor;
   final Color? selectedDateTextColor;
@@ -103,6 +115,8 @@ class _GhCalendarInternal extends StatelessWidget {
     this.onChanged,
     this.activeMinDate,
     this.activeMaxDate,
+    this.useGrid,
+    this.dayAlignment,
     this.touchableDateTextColor = Colors.black,
     this.unTouchableDateTextColor = Colors.grey,
     this.selectedDateTextColor = Colors.white,
@@ -212,8 +226,6 @@ class _GhCalendarInternal extends StatelessWidget {
         break;
       }
     }
-    // var startDay = curMonth.weekday - 1;
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return _calendarGrid(
@@ -229,7 +241,7 @@ class _GhCalendarInternal extends StatelessWidget {
                 index - startDay + 1,
               );
 
-              return _makeDay(context, index, curDay);
+              return _makeDay(index, curDay);
             },
           ),
         );
@@ -272,7 +284,7 @@ class _GhCalendarInternal extends StatelessWidget {
     );
   }
 
-  Widget _makeDay(BuildContext context, int index, DateTime curDay) {
+  Widget _makeDay(int index, DateTime curDay) {
     var isEnabled = calController.isEnableDate(curDay);
 
     return IgnorePointer(
@@ -406,7 +418,8 @@ class _GhCalendarInternal extends StatelessWidget {
 
   Widget _normalDayWidget(DateTime curDay, bool selected) {
     return Container(
-      alignment: Alignment.center,
+      decoration: _decoration,
+      alignment: dayAlignment ?? Alignment.center,
       child: Text(
         '${curDay.day}',
         style: TextStyle(
@@ -420,7 +433,8 @@ class _GhCalendarInternal extends StatelessWidget {
 
   Widget _disabledDayWidget(DateTime curDay) {
     return Container(
-      alignment: Alignment.center,
+      decoration: _decoration,
+      alignment: dayAlignment ?? Alignment.center,
       child: Text(
         '${curDay.day}',
         style: TextStyle(
@@ -429,5 +443,14 @@ class _GhCalendarInternal extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  BoxDecoration? get _decoration{
+    if(useGrid ?? false){
+      return BoxDecoration(
+        border: Border.all(color: Colors.black, width: 0.1),
+      );
+    }
+    return null;
   }
 }
